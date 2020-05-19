@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <children>
+      <HBox alignment="CENTER" layoutX="54.0" layoutY="72.0" prefHeight="241.0" prefWidth="492.0" spacing="100.0">
+         <children>
+            <TextField fx:id="bombs" promptText="бомбы" />
+            <TextField fx:id="width" promptText="ширина" />
+            <TextField fx:id="height" promptText="высота" />
+         </children></HBox>
+      <Label alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="239.0" layoutY="14.0" prefHeight="58.0" prefWidth="121.0" text="start" textAlignment="CENTER">
+         <font>
+            <Font size="43.0" />
+         </font>
+      </Label>
+      <Button fx:id="start" layoutX="251.0" layoutY="352.0" mnemonicParsing="false" text="start new game" />
+   </children>
+</Pane>

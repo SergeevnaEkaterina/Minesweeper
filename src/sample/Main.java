@@ -2,6 +2,7 @@ package sample;
 
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -24,26 +25,16 @@ import static java.lang.StrictMath.sqrt;
 
 public class Main extends Application {
 
+  
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+    Parent root = FXMLLoader.load(getClass().getResource("Start.fxml"));
+    primaryStage.setTitle("Minesweeper");
+    primaryStage.setScene(new Scene(root,300,300));
+        primaryStage.show();
+    }
     public static void main(String[] args) {
 
         Application.launch(args);
-    }
-
-    @Override
-    public void start(Stage stage) {
-
-
-        Text text = new Text("");
-        text.setLayoutY(200);
-        text.setLayoutX(200);
-
-        Group group = new Group(text);
-
-        Scene scene = new Scene(group);
-        stage.setScene(scene);
-        stage.setTitle("Minesweeper");
-        stage.setWidth(200);
-        stage.setHeight(200);
-        stage.show();
     }
 }
