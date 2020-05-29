@@ -72,21 +72,21 @@ public class Board {
         }
         return neighbors;
     }
-    public void flag(Element cell) {
-        if (!cell.getFlagged()) {
-            cell.setFlagged(true);
+    public void flag(Element e) {
+        if (!e.getFlagged()) {
+            e.setFlagged(true);
         }
         else {
-            cell.setFlagged(false);
+            e.setFlagged(false);
         }
     }
     public Element getCell(int x, int y) {
         return grid[x][y];
     }
 
-    public void openCell(Element cell) {
-        cell.setOpened(true);
-        if (cell.getBomb()) {
+    public void openCell(Element e) {
+        e.setOpened(true);
+        if (e.getBomb()) {
             end = true;
         }
     }

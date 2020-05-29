@@ -27,6 +27,7 @@ public class Game extends Application {
     private int bombCount = 10;
     private Board board;
     private Polygon[][] honeyComb;
+    @Override
     public void start(Stage primaryStage) throws Exception {
         board = new Board(lengthX, lengthY, bombCount);
         board.createBoard();
@@ -81,11 +82,11 @@ public class Game extends Application {
         Pane root = new Pane();
         ObservableList<String> field = FXCollections.observableArrayList("16*16", "12*12"); //пользователь задает размеры поля и количество бомб
         ChoiceBox<String> fieldChoiceBox = new ChoiceBox<>(field);
-        fieldChoiceBox.relocate((2 * radius + 2) * lengthX - 70, 3 * radius / 2.0*lengthY + 22);
+        fieldChoiceBox.relocate((2 * radius + 2) * lengthX - 100, 3 * radius / 2.0*lengthY + 22);
 
         ObservableList<String> amount = FXCollections.observableArrayList("10", "20");
         ChoiceBox<String> amountChoiceBox = new ChoiceBox<>(amount);
-        amountChoiceBox.relocate((2 * radius + 2) * lengthX - 110, 3 * radius / 2.0*lengthY + 22);
+        amountChoiceBox.relocate((2 * radius + 2) * lengthX - 200, 3 * radius / 2.0*lengthY + 22);
 
         fieldChoiceBox.setOnAction(e -> {
             if(fieldChoiceBox.getValue().equals("16*16")){
@@ -130,30 +131,30 @@ public class Game extends Application {
         primaryStage.setScene(new Scene(root, 2*radius*lengthX, 3 * radius/2.0*lengthY + 50));
         primaryStage.show();
     }
-    private void openCell(Element cell) {
-        Polygon hexagon = honeyComb[cell.getHor()][cell.getVert()];
-        if (cell.getOpened() || board.getEnd() || cell.getFlagged()) return;
-        board.openCell(cell);
-        if (cell.getBomb()) {
+    private void openCell(Element e) {
+        Polygon hexagon = honeyComb[e.getHor()][e.getVert()];
+        if (e.getOpened() || board.getEnd() || e.getFlagged()) return;
+        board.openCell(e);
+        if (e.getBomb()) {
             hexagon.setFill(Color.RED);//красный если бомба
             return;
         }
-        Image amount = new Image("resources\\" +cell.getNearBombs()+ ".png");//создаем картинку с количеством заминированных соседей
+        Image amount = new Image("resources\\" + e.getNearBombs()+ ".png");//создаем картинку с количеством заминированных соседей
         hexagon.setFill(new ImagePattern(amount)); //помещаем картинку на шестиугольник
-        if (!cell.getBomb()&&cell.getNearBombs() == 0) {
-            board.getNeighbors(cell).forEach(this::openCell); //открываем область пустых клеток
+        if (!e.getBomb()&&e.getNearBombs() == 0) {
+            board.getNeighbors(e).forEach(this::openCell); //открываем область пустых клеток
         }
     }
-    private void flag(Element cell) {
-        Polygon polygon = honeyComb[cell.getHor()][cell.getVert()];
-        if (board.getEnd()||cell.getOpened()) return;
-        if (!cell.getFlagged()) {
+    private void flag(Element e) {
+        Polygon polygon = honeyComb[e.getHor()][e.getVert()];
+        if (board.getEnd()||e.getOpened()) return;
+        if (!e.getFlagged()) {
             polygon.setFill(Color.BLUE);
         }
         else {
             polygon.setFill(Color.LIGHTGOLDENRODYELLOW);
         }
-        board.flag(cell);
+        board.flag(e);
     }
 
 }
