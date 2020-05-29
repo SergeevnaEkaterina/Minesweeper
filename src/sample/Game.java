@@ -1,24 +1,21 @@
 package sample;
-import javafx.application.Application;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Polygon;
-
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-
 import java.util.ArrayList;
 
-public class Game extends Application {
-
+public class Game {
     private int lengthX = 12; //размеры и количество бомб по умолчанию
     private int lengthY = 12;
     private int bombCount = 10;
@@ -39,7 +36,7 @@ public class Game extends Application {
         int radius = 20; //радиус вписанной окружности = половина высоты
         for (int x = 0; x < lengthX; x++) {
             for (int y = 0; y < lengthY; y++) {
-                Cell cell = board.getCell(x, y);
+                sample.Cell cell = board.getCell(x, y);
                 int centerX; //координаты центра
                 int centerY;
                 if (y % 2 == 0) {
@@ -79,55 +76,55 @@ public class Game extends Application {
 
 
 
-            //Label lbl = new Label();
-            //lbl.setText("field");
-            ObservableList<String> field = FXCollections.observableArrayList("16*16", "12*12");
-            ChoiceBox<String> fieldChoiceBox = new ChoiceBox<>(field);
-            fieldChoiceBox.relocate((2 * radius + 2) * lengthX - 80, 3 * radius / 2.0*lengthY + 22);
-            //lbl.relocate((2 * radius + 2) * xCells - 65, 3 * radius / 2.0 * yCells +10);
-            //Label lbl1 = new Label();
-            //lbl1.setText("bombs");
-            ObservableList<String> amount = FXCollections.observableArrayList("10", "20");
-            ChoiceBox<String> amountChoiceBox = new ChoiceBox<>(amount);
-            amountChoiceBox.relocate((2 * radius + 2) * lengthX - 110, 3 * radius / 2.0*lengthY + 22);
-            //lbl.relocate((2 * radius + 2) * xCells - 65, 3 * radius / 2.0 * yCells +10);
+        //Label lbl = new Label();
+        //lbl.setText("field");
+        ObservableList<String> field = FXCollections.observableArrayList("16*16", "12*12");
+        ChoiceBox<String> fieldChoiceBox = new ChoiceBox<>(field);
+        fieldChoiceBox.relocate((2 * radius + 2) * lengthX - 80, 3 * radius / 2.0*lengthY + 22);
+        //lbl.relocate((2 * radius + 2) * xCells - 65, 3 * radius / 2.0 * yCells +10);
+        //Label lbl1 = new Label();
+        //lbl1.setText("bombs");
+        ObservableList<String> amount = FXCollections.observableArrayList("10", "20");
+        ChoiceBox<String> amountChoiceBox = new ChoiceBox<>(amount);
+        amountChoiceBox.relocate((2 * radius + 2) * lengthX - 110, 3 * radius / 2.0*lengthY + 22);
+        //lbl.relocate((2 * radius + 2) * xCells - 65, 3 * radius / 2.0 * yCells +10);
 
 
-            fieldChoiceBox.setOnAction(e -> {
-                if(fieldChoiceBox.getValue().equals("16*16")){
-                    lengthX = 16;
-                    lengthY = 16;
-                }
-                else {
-                    lengthX = 12;
-                    lengthY = 12;
-                }
-                primaryStage.close();
-                try {
-                    start(new Stage());
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            });
-            amountChoiceBox.setOnAction(e -> {
-                if(amountChoiceBox.getValue().equals("10")){
-                    bombCount = 10;
-                }
-                else {
-                    bombCount = 20;
-                }
-                primaryStage.close();
-                try {
-                    start(new Stage());
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            });
+        fieldChoiceBox.setOnAction(e -> {
+            if(fieldChoiceBox.getValue().equals("16*16")){
+                lengthX = 16;
+                lengthY = 16;
+            }
+            else {
+                lengthX = 12;
+                lengthY = 12;
+            }
+            primaryStage.close();
+            try {
+                start(new Stage());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        amountChoiceBox.setOnAction(e -> {
+            if(amountChoiceBox.getValue().equals("10")){
+                bombCount = 10;
+            }
+            else {
+                bombCount = 20;
+            }
+            primaryStage.close();
+            try {
+                start(new Stage());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
 
-            root.getChildren().add(fieldChoiceBox);
-            root.getChildren().add(amountChoiceBox);
-           // root.getChildren().add(lbl);
-            //root.getChildren().add(lbl1);
+        root.getChildren().add(fieldChoiceBox);
+        root.getChildren().add(amountChoiceBox);
+        // root.getChildren().add(lbl);
+        //root.getChildren().add(lbl1);
 
 
         for (int x = 0; x < lengthX; x++) {
@@ -139,7 +136,7 @@ public class Game extends Application {
         primaryStage.setScene(new Scene(root, 2*radius*lengthX, 3 * radius/2.0*lengthY + 50));
         primaryStage.show();
     }
-    private void openCell(Cell cell) {
+    private void openCell(sample.Cell cell) {
         Polygon hexagon = honeyComb[cell.getHor()][cell.getVert()];
         if (cell.getOpened() || board.getEnd() || cell.getFlagged()) return;
         board.openCell(cell);
@@ -149,18 +146,18 @@ public class Game extends Application {
             return;
 
         }
-       // String text = toString(cell.getNearBombs());
-       // Text.setText(text);
+        // String text = toString(cell.getNearBombs());
+        // Text.setText(text);
         //hexagon.setFill(Color.WHITE);
-       // Label lbl2 = new Label();
+        // Label lbl2 = new Label();
         //lbl2.setText(""+cell.getNearBombs());
         //hexagon.setFill(new ImagePattern(new Image(path + ".png")));
         //resources/4.png
-      //  else hexagon.setFill(new ImagePattern(new Image(path + cell.getNearBombs() + ".png")));
-         hexagon.setFill(new ImagePattern(new Image("resources\\4.png")));
+        //  else hexagon.setFill(new ImagePattern(new Image(path + cell.getNearBombs() + ".png")));
+        hexagon.setFill(new ImagePattern(new Image("resources\\4.png")));
         //Image amount = new Image( "src\\sample\\"+ cell.getNearBombs() + ".png");//создаем картинку с количеством заминированных соседей
-       // Image amount = new Image( "src\\sample\\"+   "1.png");//создаем картинку с количеством заминированных соседей
-       // hexagon.setFill(new ImagePattern(amount)); //устанавливаем картику на шестиугольник
+        // Image amount = new Image( "src\\sample\\"+   "1.png");//создаем картинку с количеством заминированных соседей
+        // hexagon.setFill(new ImagePattern(amount)); //устанавливаем картику на шестиугольник
 //hexagon.setFill(Color.BLUE);
 
         //hexagon.setFill(cell.getNearBombs());
@@ -183,4 +180,10 @@ public class Game extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    private static void launch(String[] args) {
+    }
+
+
 }
+
