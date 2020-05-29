@@ -19,7 +19,9 @@ import javafx.util.Pair;
 import java.util.ArrayList;
 
 public class Game extends Application {
-
+    public static void main(String[] args) {
+        launch(args);
+    }
     private int lengthX = 12; //размеры и количество бомб по умолчанию
     private int lengthY = 12;
     private int bombCount = 10;
@@ -36,14 +38,13 @@ public class Game extends Application {
                 center.get(i).add(new Pair<>(0, 0));
             }
         }
-
         int radius = 20; //радиус вписанной окружности = половина высоты
         for (int x = 0; x < lengthX; x++) {
             for (int y = 0; y < lengthY; y++) {
-                Cell cell = board.getCell(x, y);
+                Element cell = board.getCell(x, y);
                 int centerX; //координаты центра
                 int centerY;
-                if (y % 2 == 0) {
+                if (y%2 == 0) {
                     centerX = (2*x + 1)*radius;
                     centerY = (3*y / 2 + 1)*radius;
                 } else {
@@ -59,7 +60,8 @@ public class Game extends Application {
                 int y2 = (int) (centerY-halfRad);
                 int y3 = centerY+radius;
                 int y4 = (int) (centerY+halfRad);
-                honeyComb[x][y] = new Polygon(x1, y1,  //рисуем шестиугольник
+                honeyComb[x][y] = new Polygon( //рисуем шестиугольник
+                        x1, y1,
                         x2, y2,
                         x2, y4,
                         x1, y3,
@@ -77,12 +79,14 @@ public class Game extends Application {
             }
         }
         Pane root = new Pane();
-        ObservableList<String> field = FXCollections.observableArrayList("16*16", "12*12");
+        ObservableList<String> field = FXCollections.observableArrayList("16*16", "12*12"); //пользователь задает размеры поля и количество бомб
         ChoiceBox<String> fieldChoiceBox = new ChoiceBox<>(field);
         fieldChoiceBox.relocate((2 * radius + 2) * lengthX - 70, 3 * radius / 2.0*lengthY + 22);
+
         ObservableList<String> amount = FXCollections.observableArrayList("10", "20");
         ChoiceBox<String> amountChoiceBox = new ChoiceBox<>(amount);
         amountChoiceBox.relocate((2 * radius + 2) * lengthX - 110, 3 * radius / 2.0*lengthY + 22);
+
         fieldChoiceBox.setOnAction(e -> {
             if(fieldChoiceBox.getValue().equals("16*16")){
                 lengthX = 16;
@@ -99,6 +103,7 @@ public class Game extends Application {
                 ex.printStackTrace();
             }
         });
+
         amountChoiceBox.setOnAction(e -> {
             if(amountChoiceBox.getValue().equals("10")){
                 bombCount = 10;
@@ -113,6 +118,7 @@ public class Game extends Application {
                 ex.printStackTrace();
             }
         });
+
         root.getChildren().add(fieldChoiceBox);
         root.getChildren().add(amountChoiceBox);
 
@@ -121,28 +127,26 @@ public class Game extends Application {
                 root.getChildren().add(honeyComb[x][y]);
             }
         }
-        primaryStage.setTitle("Сапёр");
         primaryStage.setScene(new Scene(root, 2*radius*lengthX, 3 * radius/2.0*lengthY + 50));
         primaryStage.show();
     }
-    private void openCell(Cell cell) {
+    private void openCell(Element cell) {
         Polygon hexagon = honeyComb[cell.getHor()][cell.getVert()];
         if (cell.getOpened() || board.getEnd() || cell.getFlagged()) return;
         board.openCell(cell);
         if (cell.getBomb()) {
             hexagon.setFill(Color.RED);//красный если бомба
-
             return;
-
         }
-        hexagon.setFill(new ImagePattern(new Image("resources\\" +cell.getNearBombs()+ ".png"))); //должен возвращать картинку с количеством заминированных соседей
-        if (!cell.getBomb() && cell.getNearBombs() == 0) {
-            board.getNeighbors(cell).forEach(this::openCell);
+        Image amount = new Image("resources\\" +cell.getNearBombs()+ ".png");//создаем картинку с количеством заминированных соседей
+        hexagon.setFill(new ImagePattern(amount)); //помещаем картинку на шестиугольник
+        if (!cell.getBomb()&&cell.getNearBombs() == 0) {
+            board.getNeighbors(cell).forEach(this::openCell); //открываем область пустых клеток
         }
     }
-    private void flag(Cell cell) {
+    private void flag(Element cell) {
         Polygon polygon = honeyComb[cell.getHor()][cell.getVert()];
-        if (cell.getOpened() || board.getEnd()) return;
+        if (board.getEnd()||cell.getOpened()) return;
         if (!cell.getFlagged()) {
             polygon.setFill(Color.BLUE);
         }
@@ -151,7 +155,5 @@ public class Game extends Application {
         }
         board.flag(cell);
     }
-    public static void main(String[] args) {
-        launch(args);
-    }
+
 }
