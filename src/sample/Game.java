@@ -1,4 +1,5 @@
 package sample;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -76,23 +77,12 @@ public class Game extends Application {
             }
         }
         Pane root = new Pane();
-
-
-
-        //Label lbl = new Label();
-        //lbl.setText("field");
         ObservableList<String> field = FXCollections.observableArrayList("16*16", "12*12");
         ChoiceBox<String> fieldChoiceBox = new ChoiceBox<>(field);
-        fieldChoiceBox.relocate((2 * radius + 2) * lengthX - 80, 3 * radius / 2.0*lengthY + 22);
-        //lbl.relocate((2 * radius + 2) * xCells - 65, 3 * radius / 2.0 * yCells +10);
-        //Label lbl1 = new Label();
-        //lbl1.setText("bombs");
+        fieldChoiceBox.relocate((2 * radius + 2) * lengthX - 70, 3 * radius / 2.0*lengthY + 22);
         ObservableList<String> amount = FXCollections.observableArrayList("10", "20");
         ChoiceBox<String> amountChoiceBox = new ChoiceBox<>(amount);
         amountChoiceBox.relocate((2 * radius + 2) * lengthX - 110, 3 * radius / 2.0*lengthY + 22);
-        //lbl.relocate((2 * radius + 2) * xCells - 65, 3 * radius / 2.0 * yCells +10);
-
-
         fieldChoiceBox.setOnAction(e -> {
             if(fieldChoiceBox.getValue().equals("16*16")){
                 lengthX = 16;
@@ -123,12 +113,8 @@ public class Game extends Application {
                 ex.printStackTrace();
             }
         });
-
         root.getChildren().add(fieldChoiceBox);
         root.getChildren().add(amountChoiceBox);
-        // root.getChildren().add(lbl);
-        //root.getChildren().add(lbl1);
-
 
         for (int x = 0; x < lengthX; x++) {
             for (int y = 0; y < lengthY; y++) {
@@ -144,27 +130,12 @@ public class Game extends Application {
         if (cell.getOpened() || board.getEnd() || cell.getFlagged()) return;
         board.openCell(cell);
         if (cell.getBomb()) {
-            //hexagon.setFill(Color.RED);//красный если бомба
-            hexagon.setFill(new ImagePattern(new Image("resources\\4.png")));//
+            hexagon.setFill(Color.RED);//красный если бомба
+
             return;
 
         }
-        // String text = toString(cell.getNearBombs());
-        // Text.setText(text);
-        //hexagon.setFill(Color.WHITE);
-        // Label lbl2 = new Label();
-        //lbl2.setText(""+cell.getNearBombs());
-        //hexagon.setFill(new ImagePattern(new Image(path + ".png")));
-        //resources/4.png
-        //  else hexagon.setFill(new ImagePattern(new Image(path + cell.getNearBombs() + ".png")));
-        hexagon.setFill(new ImagePattern(new Image("resources\\4.png")));
-        //Image amount = new Image( "src\\sample\\"+ cell.getNearBombs() + ".png");//создаем картинку с количеством заминированных соседей
-        // Image amount = new Image( "src\\sample\\"+   "1.png");//создаем картинку с количеством заминированных соседей
-        // hexagon.setFill(new ImagePattern(amount)); //устанавливаем картику на шестиугольник
-//hexagon.setFill(Color.BLUE);
-
-        //hexagon.setFill(cell.getNearBombs());
-        //должно возвращаться количество соседей с бомбами
+        hexagon.setFill(new ImagePattern(new Image("resources\\" +cell.getNearBombs()+ ".png"))); //должен возвращать картинку с количеством заминированных соседей
         if (!cell.getBomb() && cell.getNearBombs() == 0) {
             board.getNeighbors(cell).forEach(this::openCell);
         }
@@ -184,4 +155,3 @@ public class Game extends Application {
         launch(args);
     }
 }
-
