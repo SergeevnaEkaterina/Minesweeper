@@ -72,6 +72,7 @@ public class Board {
         }
         return neighbors;
     }
+
     public void flag(Element e) {
         if (!e.getFlagged()) {
             e.setFlagged(true);

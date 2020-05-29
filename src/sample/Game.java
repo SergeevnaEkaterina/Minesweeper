@@ -77,7 +77,7 @@ public class Game extends Application {
                 honeyComb[x][y].setStroke(Color.ORANGERED);
                 honeyComb[x][y].setOnMouseClicked(e -> {
                     if (e.getButton() == MouseButton.PRIMARY)
-                        openCell(cell);
+                        reveal(cell);
                     else {
                         flag(cell);
                     }
@@ -150,7 +150,7 @@ public class Game extends Application {
         board.flag(e);
     }
 
-    private void openCell(Element e) {
+    private void reveal(Element e) {
         Polygon hexagon = honeyComb[e.getHor()][e.getVert()];
         if (e.getOpened() || board.getEnd() || e.getFlagged()) return;
         board.openCell(e);
@@ -159,15 +159,15 @@ public class Game extends Application {
             return;
         }
         //String text = e.getNearBombs() == 0 ? "" : Integer.toString((int) e.getNearBombs());
-        //hexagon.setUserData(e.getNearBombs());
+        //hexagon.setUserData(text);
 
-       // Image amount = new Image("resources/" + e.getNearBombs()+".png");//создаем картинку с количеством заминированных соседей
-       // hexagon.setFill(new ImagePattern(amount)); //помещаем картинку на шестиугольник
+        Image amount = new Image("resources/" + e.getNearBombs()+".png");//создаем картинку с количеством заминированных соседей
+        hexagon.setFill(new ImagePattern(amount)); //помещаем картинку на шестиугольник
 
         if (!e.getBomb()&&e.getNearBombs() == 0) {
-            board.getNeighbors(e).forEach(this::openCell); //открываем пустые соседние клетки
+            board.getNeighbors(e).forEach(this::reveal); //открываем пустые соседние клетки
         }
-        
+
 
     }
 
