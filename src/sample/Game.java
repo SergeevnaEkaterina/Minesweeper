@@ -16,6 +16,8 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class Game extends Application {
@@ -28,7 +30,7 @@ public class Game extends Application {
     private Board board;
     private Polygon[][] honeyComb;
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         board = new Board(lengthX, lengthY, bombCount);
         board.createBoard();
         honeyComb = new Polygon[lengthX][lengthY];
@@ -39,27 +41,27 @@ public class Game extends Application {
                 center.get(i).add(new Pair<>(0, 0));
             }
         }
-        int radius = 20; //радиус вписанной окружности = половина высоты
+        int radCir = 30; //радиус вписанной окружности = половина высоты
         for (int x = 0; x < lengthX; x++) {
             for (int y = 0; y < lengthY; y++) {
                 Element cell = board.getCell(x, y);
                 int centerX; //координаты центра
                 int centerY;
                 if (y%2 == 0) {
-                    centerX = (2*x + 1)*radius;
-                    centerY = (3*y / 2 + 1)*radius;
+                    centerX = (2*x + 1)*radCir;
+                    centerY = (3*y / 2 + 1)*radCir;
                 } else {
-                    centerX = (2*x + 2)*radius;
-                    centerY = (3*y / 2 + 1)*radius + radius / 2;
+                    centerX = (2*x + 2)*radCir;
+                    centerY = (3*y / 2 + 1)*radCir + radCir/ 2;
                 }
                 center.get(x).set(y, new Pair<>(centerX, centerY)); //устанавливаем координаты центра
-                double halfRad = radius/2.0;   // координаты шестиугольника
+                double halfRad = radCir/2.0;   // координаты шестиугольника
                 int x1 = centerX;
-                int x2 = centerX + radius;
-                int x3 = centerX - radius;
-                int y1 = centerY-radius;
+                int x2 = centerX + radCir;
+                int x3 = centerX - radCir;
+                int y1 = centerY-radCir;
                 int y2 = (int) (centerY-halfRad);
-                int y3 = centerY+radius;
+                int y3 = centerY+radCir;
                 int y4 = (int) (centerY+halfRad);
                 honeyComb[x][y] = new Polygon( //рисуем шестиугольник
                         x1, y1,
@@ -82,11 +84,11 @@ public class Game extends Application {
         Pane root = new Pane();
         ObservableList<String> field = FXCollections.observableArrayList("16*16", "12*12"); //пользователь задает размеры поля и количество бомб
         ChoiceBox<String> fieldChoiceBox = new ChoiceBox<>(field);
-        fieldChoiceBox.relocate((2 * radius + 2) * lengthX - 100, 3 * radius / 2.0*lengthY + 22);
+        fieldChoiceBox.relocate((2*radCir + 2)*lengthX - 100, 3*radCir / 2.0*lengthY + 22);
 
         ObservableList<String> amount = FXCollections.observableArrayList("10", "20");
         ChoiceBox<String> amountChoiceBox = new ChoiceBox<>(amount);
-        amountChoiceBox.relocate((2 * radius + 2) * lengthX - 200, 3 * radius / 2.0*lengthY + 22);
+        amountChoiceBox.relocate((2*radCir + 2)*lengthX - 200, 3*radCir / 2.0*lengthY + 22);
 
         fieldChoiceBox.setOnAction(e -> {
             if(fieldChoiceBox.getValue().equals("16*16")){
@@ -128,7 +130,7 @@ public class Game extends Application {
                 root.getChildren().add(honeyComb[x][y]);
             }
         }
-        primaryStage.setScene(new Scene(root, 2*radius*lengthX, 3 * radius/2.0*lengthY + 50));
+        primaryStage.setScene(new Scene(root, 2*radCir*lengthX, 3 * radCir/2.0*lengthY + 50));
         primaryStage.show();
     }
     private void openCell(Element e) {
@@ -141,9 +143,11 @@ public class Game extends Application {
         }
         Image amount = new Image("resources\\" + e.getNearBombs()+ ".png");//создаем картинку с количеством заминированных соседей
         hexagon.setFill(new ImagePattern(amount)); //помещаем картинку на шестиугольник
+
         if (!e.getBomb()&&e.getNearBombs() == 0) {
-            board.getNeighbors(e).forEach(this::openCell); //открываем область пустых клеток
+            board.getNeighbors(e).forEach(this::openCell); //открываем пустые соседние клетки
         }
+
     }
     private void flag(Element e) {
         Polygon polygon = honeyComb[e.getHor()][e.getVert()];
