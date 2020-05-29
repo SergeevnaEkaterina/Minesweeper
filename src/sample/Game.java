@@ -21,14 +21,17 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class Game extends Application {
+
     public static void main(String[] args) {
         launch(args);
     }
+
     private int lengthX = 12; //размеры и количество бомб по умолчанию
     private int lengthY = 12;
     private int bombCount = 10;
     private Board board;
     private Polygon[][] honeyComb;
+
     @Override
     public void start(Stage primaryStage) {
         board = new Board(lengthX, lengthY, bombCount);
@@ -81,6 +84,7 @@ public class Game extends Application {
                 });
             }
         }
+
         Pane root = new Pane();
         ObservableList<String> field = FXCollections.observableArrayList("16*16", "12*12"); //пользователь задает размеры поля и количество бомб
         ChoiceBox<String> fieldChoiceBox = new ChoiceBox<>(field);
@@ -133,22 +137,7 @@ public class Game extends Application {
         primaryStage.setScene(new Scene(root, 2*radCir*lengthX, 3 * radCir/2.0*lengthY + 50));
         primaryStage.show();
     }
-    private void openCell(Element e) {
-        Polygon hexagon = honeyComb[e.getHor()][e.getVert()];
-        if (e.getOpened() || board.getEnd() || e.getFlagged()) return;
-        board.openCell(e);
-        if (e.getBomb()) {
-            hexagon.setFill(Color.RED);//красный если бомба
-            return;
-        }
-        Image amount = new Image("resources\\" + e.getNearBombs()+ ".png");//создаем картинку с количеством заминированных соседей
-        hexagon.setFill(new ImagePattern(amount)); //помещаем картинку на шестиугольник
 
-        if (!e.getBomb()&&e.getNearBombs() == 0) {
-            board.getNeighbors(e).forEach(this::openCell); //открываем пустые соседние клетки
-        }
-
-    }
     private void flag(Element e) {
         Polygon polygon = honeyComb[e.getHor()][e.getVert()];
         if (board.getEnd()||e.getOpened()) return;
@@ -160,5 +149,27 @@ public class Game extends Application {
         }
         board.flag(e);
     }
+
+    private void openCell(Element e) {
+        Polygon hexagon = honeyComb[e.getHor()][e.getVert()];
+        if (e.getOpened() || board.getEnd() || e.getFlagged()) return;
+        board.openCell(e);
+        if (e.getBomb()) {
+            hexagon.setFill(Color.RED);//красный если бомба
+            return;
+        }
+        //String text = e.getNearBombs() == 0 ? "" : Integer.toString((int) e.getNearBombs());
+        //hexagon.setUserData(e.getNearBombs());
+
+       // Image amount = new Image("resources/" + e.getNearBombs()+".png");//создаем картинку с количеством заминированных соседей
+       // hexagon.setFill(new ImagePattern(amount)); //помещаем картинку на шестиугольник
+
+        if (!e.getBomb()&&e.getNearBombs() == 0) {
+            board.getNeighbors(e).forEach(this::openCell); //открываем пустые соседние клетки
+        }
+        
+
+    }
+
 
 }

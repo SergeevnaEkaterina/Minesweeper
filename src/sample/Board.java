@@ -50,7 +50,7 @@ public class Board {
     }
 
 
-    public List<Element> getNeighbors(Element cell) { //считаем соседей
+    public List<Element> getNeighbors(Element cell) { //ищем соседей
         List<Element> neighbors = new ArrayList<>();
         int[] dif1 = {-1, 0, -1, -1, 0, -1, 1, 0, 0, 1, -1, 1};
         int[] dif2 = {-1, 0, 0, -1, 1, -1, 1, 0, 1, 1, 0, 1};
