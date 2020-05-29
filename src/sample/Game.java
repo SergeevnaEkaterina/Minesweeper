@@ -1,21 +1,24 @@
 package sample;
-
+import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Polygon;
+
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+
 import java.util.ArrayList;
 
-public class Game {
+public class Game extends Application {
+
     private int lengthX = 12; //размеры и количество бомб по умолчанию
     private int lengthY = 12;
     private int bombCount = 10;
@@ -36,7 +39,7 @@ public class Game {
         int radius = 20; //радиус вписанной окружности = половина высоты
         for (int x = 0; x < lengthX; x++) {
             for (int y = 0; y < lengthY; y++) {
-                sample.Cell cell = board.getCell(x, y);
+                Cell cell = board.getCell(x, y);
                 int centerX; //координаты центра
                 int centerY;
                 if (y % 2 == 0) {
@@ -136,7 +139,7 @@ public class Game {
         primaryStage.setScene(new Scene(root, 2*radius*lengthX, 3 * radius/2.0*lengthY + 50));
         primaryStage.show();
     }
-    private void openCell(sample.Cell cell) {
+    private void openCell(Cell cell) {
         Polygon hexagon = honeyComb[cell.getHor()][cell.getVert()];
         if (cell.getOpened() || board.getEnd() || cell.getFlagged()) return;
         board.openCell(cell);
@@ -180,10 +183,5 @@ public class Game {
     public static void main(String[] args) {
         launch(args);
     }
-
-    private static void launch(String[] args) {
-    }
-
-
 }
 
