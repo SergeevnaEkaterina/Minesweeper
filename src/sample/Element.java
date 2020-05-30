@@ -3,17 +3,17 @@ package sample;
 public class Element {
     private boolean flagged = false;
     private boolean isMine;
-    private final int HORIZONT;
+    private final int HORIZONTAL;
     private final int VERTICAL;
     private boolean opened = false;
     private long bombsClose;
-    public Element(int HORIZONT, int VERTICAL, boolean isMine) {
-        this.HORIZONT = HORIZONT;
+    public Element(int HORIZONTAL, int VERTICAL, boolean isMine) {
+        this.HORIZONTAL = HORIZONTAL;
         this.VERTICAL = VERTICAL;
         this.isMine = isMine;
     }
     public int getHor() {
-        return HORIZONT;
+        return HORIZONTAL;
     }
 
     public int getVert() {
