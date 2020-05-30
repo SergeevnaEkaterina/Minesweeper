@@ -1,5 +1,6 @@
 package sample;
 
+
 public class Element {
     private boolean flagged = false;
     private boolean isMine;
@@ -7,16 +8,18 @@ public class Element {
     private final int VERTICAL;
     private boolean opened = false;
     private long bombsClose;
-    public Element(int HORIZONTAL, int VERTICAL, boolean isMine) {
-        this.HORIZONTAL = HORIZONTAL;
-        this.VERTICAL = VERTICAL;
+
+    public Element(int horizontal, int vertical, boolean isMine) {
+        this.HORIZONTAL = horizontal;
+        this.VERTICAL = vertical;
         this.isMine = isMine;
     }
-    public int getHor() {
+
+    public int getHorizontal() {
         return HORIZONTAL;
     }
 
-    public int getVert() {
+    public int getVertical() {
         return VERTICAL;
     }
 
@@ -36,7 +39,7 @@ public class Element {
         flagged = flag;
     }
 
-    public long getNearBombs() {//заминированные соседние клетки
+    public long getMinedNear() {//количество заминированных соседей
         return bombsClose;
     }
 
