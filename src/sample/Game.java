@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -16,7 +17,11 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Game extends Application {
 
@@ -24,14 +29,19 @@ public class Game extends Application {
         launch(args);
     }
 
-    private int lengthX = 12; //количесвто ячеек и бомб по умолчанию
-    private int lengthY = 12;
-    private int bombCount = 10;
+    public int lengthX = 12; //количесвто ячеек и бомб по умолчанию
+    public int lengthY = 12;
+    public int bombCount = 10;
     private Board board;
     private Polygon[][] honeyComb;
 
+    public Map<Integer, Image> map;
+    public Image i;
+
+
     @Override
     public void start(Stage primaryStage) {
+       
         board = new Board(lengthX, lengthY, bombCount);
         board.createBoard();
         honeyComb = new Polygon[lengthX][lengthY];
@@ -146,8 +156,20 @@ public class Game extends Application {
         }
         board.flag(element);
     }
+    public void setMap() throws FileNotFoundException { //массив для картинок
+        map = new HashMap<>();
+        map.put(0, new Image(new FileInputStream("/0.png")));
+        map.put(1, new Image(new FileInputStream("/1.png")));
+        map.put(2, new Image(new FileInputStream("/2.png")));
+        map.put(3, new Image(new FileInputStream("/3.png")));
+        map.put(4, new Image(new FileInputStream("/4.png")));
+        map.put(5, new Image(new FileInputStream("/5.png")));
+        map.put(6, new Image(new FileInputStream("/6.png")));
 
-    private void reveal(Element element) {
+    }
+
+
+    private void reveal(Element element)  {
         Polygon hexagon = honeyComb[element.getHorizontal()][element.getVertical()];
         if (element.getOpened() || board.getEnd() || element.getFlagged()) return;
         board.openCell(element);
@@ -155,11 +177,17 @@ public class Game extends Application {
             hexagon.setFill(Color.RED);//если бомба
             return;
         }
-        //String text = e.getNearBombs() == 0 ? "" : Integer.toString((int) e.getNearBombs());
+
+        //String text = e.getNearBombs() == 0 ? "" : Integer.toString((int) element.getMinedNear());
         //hexagon.setUserData(text);
 
-        Image amount = new Image("/" + element.getMinedNear()  + ".png");//создаем картинку с количеством заминированных соседей
-        hexagon.setFill(new ImagePattern(amount)); //устанавливаем ее на шестиугольник
+            for(Map.Entry<Integer, Image> item : map.entrySet()){ //перебираем картинки
+
+                if( item.getKey()==element.getMinedNear()) { //ищем картинку с номером соседей
+                    i = item.getValue();
+                }
+                hexagon.setFill(new ImagePattern(i)); //помещаем картинку на шестиугольник
+            }
 
         if (!(element.getBomb()) && element.getMinedNear() == 0) {
             board.getNeighbors(element).forEach(this::reveal); //открываем незаминированную область

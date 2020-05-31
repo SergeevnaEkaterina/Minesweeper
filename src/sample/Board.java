@@ -1,15 +1,19 @@
 package sample;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 public class Board {
-    private int xCells;
-    private int yCells;
-    private int bombCount;
-    private boolean end = false;
-    private Element[][] elem;
+    public int xCells;
+    public int yCells;
+    public int bombCount;
+    public boolean end = false;
+    public Element[][] elem;
+
 
     public Board(int xCells, int yCells, int bombCount) {
         this.xCells = xCells;
@@ -17,6 +21,8 @@ public class Board {
         this.bombCount = bombCount;
         elem = new Element[xCells][yCells];
     }
+
+
 
     public void createBoard() {  //создаем поле
         Random random1 = new Random();
@@ -71,6 +77,9 @@ public class Board {
         }
         return neighbors;
     }
+    public Element getElement(int x, int y) {
+        return elem[x][y];
+    }
 
     public void flag(Element e) {
         if (!(e.getFlagged())) {
@@ -80,9 +89,7 @@ public class Board {
         }
     }
 
-    public Element getElement(int x, int y) {
-        return elem[x][y];
-    }
+
 
     public void openCell(Element e) {
         e.setOpened(true);
@@ -94,4 +101,5 @@ public class Board {
     public boolean getEnd() {
         return end;
     }
+
 }
