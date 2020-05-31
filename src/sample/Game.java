@@ -193,9 +193,7 @@ public class Game extends Application {
         //String text = e.getNearBombs() == 0 ? "" : Integer.toString((int) element.getMinedNear());
         //hexagon.setUserData(text);
 
-        if (!(element.getBomb()) && element.getMinedNear() == 0) {
-            board.getNeighbors(element).forEach(this::reveal); //открываем незаминированную область
-        }
+
            for(Map.Entry<Integer, Image> item : a.entrySet()){ //перебираем картинки
 
                if( item.getKey()== (int)element.getMinedNear()) { //ищем картинку с номером соседей
@@ -206,7 +204,9 @@ public class Game extends Application {
         hexagon.setFill(new ImagePattern(i)); //помещаем картинку на шестиугольник
         //Image amount = new Image("/" + element.getMinedNear()  + ".png");//создаем картинку с количеством заминированных соседей
        // hexagon.setFill(new ImagePattern(amount)); //устанавливаем ее на шестиугольник
-
+        if (!(element.getBomb()) && element.getMinedNear() == 0) {
+            board.getNeighbors(element).forEach(this::reveal); //открываем незаминированную область
+        }
 
     }
 }
