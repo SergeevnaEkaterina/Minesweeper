@@ -189,7 +189,7 @@ public class Game extends Application {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-     System.out.println(images.isEmpty());
+      // System.out.println(images.isEmpty());//проверяю заполнился ли массив
 
          Image count = images.get((int)element.getMinedNear());//берем картинку из массива, где ключ-количество мин рядом
          hexagon.setFill(new ImagePattern(count)); //устанавливаем ее на шестиугольник
