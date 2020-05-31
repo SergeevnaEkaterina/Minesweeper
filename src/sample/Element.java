@@ -43,7 +43,7 @@ public class Element {
         return bombsClose;
     }
 
-    public void setNearBombs(long count) {
+    public void setMinedNear(long count) {
         bombsClose = count;
     }
 

@@ -50,7 +50,7 @@ public class Board {
                     continue;
                 }
                 long amount = getNeighbors(e).stream().filter(Element::getBomb).count();
-                e.setNearBombs(amount);
+                e.setMinedNear(amount);
             }
         }
     }

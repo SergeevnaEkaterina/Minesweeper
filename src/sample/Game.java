@@ -157,7 +157,7 @@ public class Game extends Application {
         }
         board.flag(element);
     }
-    public Map<Integer, Image> setMap() throws FileNotFoundException { //массив для картинок
+    public Map<Integer, Image> makeMap() throws FileNotFoundException { //массив для картинок
         map = new HashMap<>();
         map.put(0, new Image(new FileInputStream("/0.png")));
         map.put(1, new Image(new FileInputStream("/1.png")));
@@ -175,7 +175,7 @@ public class Game extends Application {
 
     {
         try {
-            a = setMap();
+            a = makeMap();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -195,11 +195,9 @@ public class Game extends Application {
 
 
            for(Map.Entry<Integer, Image> item : a.entrySet()){ //перебираем картинки
-
                if( item.getKey()== (int)element.getMinedNear()) { //ищем картинку с номером соседей
                     i = item.getValue();
                }
-
             }
         hexagon.setFill(new ImagePattern(i)); //помещаем картинку на шестиугольник
         //Image amount = new Image("/" + element.getMinedNear()  + ".png");//создаем картинку с количеством заминированных соседей
@@ -209,4 +207,5 @@ public class Game extends Application {
         }
 
     }
+
 }
