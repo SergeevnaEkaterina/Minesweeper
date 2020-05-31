@@ -23,8 +23,8 @@ import java.util.Map;
 
 public class Game extends Application {
 
-    public Game() throws FileNotFoundException {
-    }
+   //public Game() throws FileNotFoundException {
+    //}
 
     public static void main(String[] args) {
         launch(args);
@@ -171,7 +171,15 @@ public class Game extends Application {
     }
 
 
-    Map<Integer,Image> a = setMap();
+    public Map<Integer,Image> a;
+
+    {
+        try {
+            a = setMap();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void reveal(Element element)  {
         Polygon hexagon = honeyComb[element.getHorizontal()][element.getVertical()];
@@ -190,8 +198,9 @@ public class Game extends Application {
                if( item.getKey()== (int)element.getMinedNear()) { //ищем картинку с номером соседей
                     i = item.getValue();
                }
-               hexagon.setFill(new ImagePattern(i)); //помещаем картинку на шестиугольник
+
             }
+        hexagon.setFill(new ImagePattern(i)); //помещаем картинку на шестиугольник
         //Image amount = new Image("/" + element.getMinedNear()  + ".png");//создаем картинку с количеством заминированных соседей
        // hexagon.setFill(new ImagePattern(amount)); //устанавливаем ее на шестиугольник
 
