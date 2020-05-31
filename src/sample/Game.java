@@ -6,13 +6,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Polygon;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -24,6 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Game extends Application {
+
+    public Game() throws FileNotFoundException {
+    }
 
     public static void main(String[] args) {
         launch(args);
@@ -156,7 +157,7 @@ public class Game extends Application {
         }
         board.flag(element);
     }
-    public void setMap() throws FileNotFoundException { //массив для картинок
+    public Map<Integer, Image> setMap() throws FileNotFoundException { //массив для картинок
         map = new HashMap<>();
         map.put(0, new Image(new FileInputStream("/0.png")));
         map.put(1, new Image(new FileInputStream("/1.png")));
@@ -166,8 +167,11 @@ public class Game extends Application {
         map.put(5, new Image(new FileInputStream("/5.png")));
         map.put(6, new Image(new FileInputStream("/6.png")));
 
+        return map;
     }
 
+
+    Map<Integer,Image> a = setMap();
 
     private void reveal(Element element)  {
         Polygon hexagon = honeyComb[element.getHorizontal()][element.getVertical()];
@@ -181,13 +185,15 @@ public class Game extends Application {
         //String text = e.getNearBombs() == 0 ? "" : Integer.toString((int) element.getMinedNear());
         //hexagon.setUserData(text);
 
-            for(Map.Entry<Integer, Image> item : map.entrySet()){ //перебираем картинки
+            for(Map.Entry<Integer, Image> item : a.entrySet()){ //перебираем картинки
 
-                if( item.getKey()==element.getMinedNear()) { //ищем картинку с номером соседей
+               if( item.getKey()== (int)element.getMinedNear()) { //ищем картинку с номером соседей
                     i = item.getValue();
-                }
-                hexagon.setFill(new ImagePattern(i)); //помещаем картинку на шестиугольник
+               }
+               hexagon.setFill(new ImagePattern(i)); //помещаем картинку на шестиугольник
             }
+        //Image amount = new Image("/" + element.getMinedNear()  + ".png");//создаем картинку с количеством заминированных соседей
+       // hexagon.setFill(new ImagePattern(amount)); //устанавливаем ее на шестиугольник
 
         if (!(element.getBomb()) && element.getMinedNear() == 0) {
             board.getNeighbors(element).forEach(this::reveal); //открываем незаминированную область
