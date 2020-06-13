@@ -5,7 +5,6 @@ import java.util.Random;
 import sample.Board;
 import sample.Element;
 import java.util.List;
-
 class BoardTest {
     Board board = new Board(16,16,20);
 

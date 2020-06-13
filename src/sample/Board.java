@@ -1,11 +1,11 @@
 package sample;
 
+
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Polygon;
 
-import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Board {
@@ -15,8 +15,8 @@ public class Board {
     public int flagCount = 0;
     public boolean end = false;
     public Element[][] elem;
-
-
+    private ArrayList<Image> images;
+    private Polygon[][] honeyComb;
     public Board(int xCells, int yCells, int bombCount) {
         this.xCells = xCells;
         this.yCells = yCells;
@@ -83,9 +83,7 @@ public class Board {
         return elem[x][y];
     }
 
-    public int getFlagCount() {
-       return flagCount;
-    }
+
 
     public void flag(Element e) {
         if (!e.getFlagged()) {
@@ -106,13 +104,36 @@ public class Board {
 
     }
 
+    void openElement(Element element) {
+        Polygon hexagon = honeyComb[element.getHorizontal()][element.getVertical()];
+        if (element.getOpened() || getEnd() || element.getFlagged()) return;
+        reveal(element);
+        if (element.getBomb()) {
+            hexagon.setFill(Color.RED);//если бомба
 
+            return;
+        }
+
+        Image count = images.get((int) element.getMinedNear());//берем картинку из массива, где номер- количество мин рядом
+        hexagon.setFill(new ImagePattern(count)); //устанавливаем ее на шестиугольник
+
+
+        if (!(element.getBomb()) && element.getMinedNear() == 0) {
+            getNeighbors(element).forEach(this::openElement); //открываем незаминированную область
+        }
+
+
+    }
     public boolean getEnd() {
         return end;
     }
 
-    public void setEnd() {
-        end = true;
+
+    public void setImages(ArrayList<Image> images) {
+        this.images = images;
     }
 
+    public void setHoneyComb(Polygon[][] honeyComb) {
+        this.honeyComb = honeyComb;
+    }
 }
