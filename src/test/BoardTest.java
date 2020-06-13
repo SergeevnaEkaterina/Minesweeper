@@ -40,7 +40,7 @@ class BoardTest {
             int j = random1.nextInt(8);
 
             if (!(board.getElement(i,j).getBomb())) {
-                board.openCell(board.getElement(i,j));
+                board.reveal(board.getElement(i,j));
                 assertTrue(board.getElement (i,j).getOpened());
             }
             else {

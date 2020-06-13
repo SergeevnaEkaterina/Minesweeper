@@ -18,13 +18,11 @@ import javafx.util.Pair;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Game extends Application {
 
-    //public Game() throws FileNotFoundException {
-    //}
+
+
 
     public static void main(String[] args) {
         launch(args);
@@ -36,9 +34,8 @@ public class Game extends Application {
     private Board board;
     private Polygon[][] honeyComb;
 
-    //public Image i;
-   // public Image amount;
-    private Map<Integer, Image> images;
+
+    private ArrayList<Image> images;
 
     @Override
     public void start(Stage primaryStage) {
@@ -54,7 +51,7 @@ public class Game extends Application {
             }
         }
 
-        int radCir = 30; //радиус вписанной окружности=половины высоты
+        int radCir = 30; //радиус вписанной окружности = половина высоты
         for (int x = 0; x < lengthX; x++) {
             for (int y = 0; y < lengthY; y++) {
                 Element cell = board.getElement(x, y);
@@ -149,9 +146,12 @@ public class Game extends Application {
 
     private void flag(Element element) {
         Polygon polygon = honeyComb[element.getHorizontal()][element.getVertical()];
+
         if (board.getEnd() || element.getOpened()) return;
         if (!(element.getFlagged())) {
-            polygon.setFill(Color.BLUE);
+            // polygon.setFill(new ImagePattern(new Image("resources/6.png")));
+            Image flag = images.get(7);
+            polygon.setFill(new ImagePattern(flag));
         } else {
             polygon.setFill(Color.LIGHTGOLDENRODYELLOW);
         }
@@ -159,54 +159,44 @@ public class Game extends Application {
     }
 
     private void makeImages() throws FileNotFoundException { //массив для картинок
-        images = new HashMap<>();
-        images.put(0, new Image(new FileInputStream("resources/0.png")));
-        images.put(1, new Image(new FileInputStream("resources/1.png")));
-        images.put(2, new Image(new FileInputStream("resources/2.png")));
-        images.put(3, new Image(new FileInputStream("resources/3.png")));
-        images.put(4, new Image(new FileInputStream("resources/4.png")));
-        images.put(5, new Image(new FileInputStream("resources/5.png")));
-        images.put(6, new Image(new FileInputStream("resources/6.png")));
-
-
+        images = new ArrayList<>();
+        images.add(new Image(new FileInputStream("resources/0.png")));
+        images.add(new Image(new FileInputStream("resources/1.png")));
+        images.add(new Image(new FileInputStream("resources/2.png")));
+        images.add(new Image(new FileInputStream("resources/3.png")));
+        images.add(new Image(new FileInputStream("resources/4.png")));
+        images.add(new Image(new FileInputStream("resources/5.png")));
+        images.add(new Image(new FileInputStream("resources/6.png")));
+        images.add(new Image(new FileInputStream("resources/flag.png")));
     }
 
 
     private void reveal(Element element) {
         Polygon hexagon = honeyComb[element.getHorizontal()][element.getVertical()];
         if (element.getOpened() || board.getEnd() || element.getFlagged()) return;
-        board.openCell(element);
+        board.reveal(element);
         if (element.getBomb()) {
             hexagon.setFill(Color.RED);//если бомба
+
             return;
         }
 
-
-        //String text = e.getNearBombs() == 0 ? "" : Integer.toString((int) element.getMinedNear());
-        //hexagon.setUserData(text);
         try {
             makeImages();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-      // System.out.println(images.isEmpty());//проверяю заполнился ли массив
-
-         Image count = images.get((int)element.getMinedNear());//берем картинку из массива, где ключ-количество мин рядом
-         hexagon.setFill(new ImagePattern(count)); //устанавливаем ее на шестиугольник
 
 
-       // for (Map.Entry<Integer, Image> item : images.entrySet()) { //перебираем картинки
-          //  if (item.getKey() == (int) element.getMinedNear()) { //ищем картинку с номером соседей
-              //  i = item.getValue();
-           // }
-       // }
-        //hexagon.setFill(new ImagePattern(i)); //помещаем картинку на шестиугольник
-        //Image amount = new Image("/" + element.getMinedNear()  + ".png");//создаем картинку с количеством заминированных соседей
-        // hexagon.setFill(new ImagePattern(amount)); //устанавливаем ее на шестиугольник
+        Image count = images.get((int)element.getMinedNear());//берем картинку из массива, где номер- количество мин рядом
+        hexagon.setFill(new ImagePattern(count)); //устанавливаем ее на шестиугольник
+
+
         if (!(element.getBomb()) && element.getMinedNear() == 0) {
             board.getNeighbors(element).forEach(this::reveal); //открываем незаминированную область
         }
 
 
     }
+
 }

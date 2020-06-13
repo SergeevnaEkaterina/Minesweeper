@@ -1,9 +1,10 @@
 package sample;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Polygon;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 
@@ -11,6 +12,7 @@ public class Board {
     public int xCells;
     public int yCells;
     public int bombCount;
+    public int flagCount = 0;
     public boolean end = false;
     public Element[][] elem;
 
@@ -81,25 +83,36 @@ public class Board {
         return elem[x][y];
     }
 
+    public int getFlagCount() {
+       return flagCount;
+    }
+
     public void flag(Element e) {
-        if (!(e.getFlagged())) {
+        if (!e.getFlagged()) {
             e.setFlagged(true);
-        } else {
+            flagCount++;
+        }
+        else {
             e.setFlagged(false);
+            flagCount--;
         }
     }
 
-
-
-    public void openCell(Element e) {
+    public void reveal(Element e) {
         e.setOpened(true);
         if (e.getBomb()) {
             end = true;
         }
+
     }
+
 
     public boolean getEnd() {
         return end;
+    }
+
+    public void setEnd() {
+        end = true;
     }
 
 }
