@@ -1,22 +1,18 @@
 package sample;
-
-
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Polygon;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Board {
-    public int xCells;
-    public int yCells;
-    public int bombCount;
-    public int flagCount = 0;
-    public boolean end = false;
-    public Element[][] elem;
-    private ArrayList<Image> images;
+    private int xCells;
+    private int yCells;
+    private int bombCount;
+    private Graphics graphics ;
+    private boolean end = false;
+    private Element[][] elem;
     private Polygon[][] honeyComb;
+    public Message m = new Message();
     public Board(int xCells, int yCells, int bombCount) {
         this.xCells = xCells;
         this.yCells = yCells;
@@ -24,11 +20,13 @@ public class Board {
         elem = new Element[xCells][yCells];
     }
 
-
+    public void setGraphics(Graphics graphics){
+        this.graphics = graphics;
+    }
 
     public void createBoard() {  //создаем поле
-        Random random1 = new Random();
-        Random random2 = new Random();
+
+        Random random = new Random();
         for (int x = 0; x < xCells; x++) {
             for (int y = 0; y < yCells; y++) {
                 Element e = new Element(x, y, false);
@@ -36,11 +34,11 @@ public class Board {
             }
         }
         for (int i = 0; i < bombCount; i++) { //расставляем бомбы
-            int x = random1.nextInt(xCells);
-            int y = random2.nextInt(yCells);
+            int x = random.nextInt(xCells);
+            int y = random.nextInt(yCells);
             while (elem[x][y].getBomb()) {
-                x = random1.nextInt(xCells);
-                y = random2.nextInt(yCells);
+                x = random.nextInt(xCells);
+                y = random.nextInt(yCells);
             }
             elem[x][y].setBomb(true);
         }
@@ -88,50 +86,42 @@ public class Board {
     public void flag(Element e) {
         if (!e.getFlagged()) {
             e.setFlagged(true);
-            flagCount++;
         }
         else {
             e.setFlagged(false);
-            flagCount--;
         }
     }
 
-    public void reveal(Element e) {
+    public void reveal(Element e)  {
         e.setOpened(true);
         if (e.getBomb()) {
             end = true;
+            System.out.println("you lose");
+
+         m.lose();
         }
+
 
     }
 
-    void openElement(Element element) {
+    void openElement(Element element)  {
         Polygon hexagon = honeyComb[element.getHorizontal()][element.getVertical()];
         if (element.getOpened() || getEnd() || element.getFlagged()) return;
         reveal(element);
         if (element.getBomb()) {
-            hexagon.setFill(Color.RED);//если бомба
-
+            graphics.redColor(hexagon);
             return;
+
         }
-
-        Image count = images.get((int) element.getMinedNear());//берем картинку из массива, где номер- количество мин рядом
-        hexagon.setFill(new ImagePattern(count)); //устанавливаем ее на шестиугольник
-
-
+        graphics.updateUI(hexagon,element);
         if (!(element.getBomb()) && element.getMinedNear() == 0) {
             getNeighbors(element).forEach(this::openElement); //открываем незаминированную область
         }
-
-
     }
     public boolean getEnd() {
         return end;
     }
 
-
-    public void setImages(ArrayList<Image> images) {
-        this.images = images;
-    }
 
     public void setHoneyComb(Polygon[][] honeyComb) {
         this.honeyComb = honeyComb;

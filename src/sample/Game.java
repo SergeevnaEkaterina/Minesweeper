@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
@@ -14,7 +13,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,21 +25,25 @@ public class Game extends Application {
         launch(args);
     }
 
-    public int lengthX = 12; //количество ячеек и бомб по умолчанию
-    public int lengthY = 12;
-    public int bombCount = 10;
+    private int lengthX = 12; //количество ячеек и бомб по умолчанию
+    private int lengthY = 12;
+    private int bombCount = 10;
+    private int minesLeft = bombCount;
+    private int flags = 0;
     private Board board;
     private Polygon[][] honeyComb;
     private ArrayList<Image> images;
-
+    private Graphics graphics;
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
         makeImages();
         honeyComb = new Polygon[lengthX][lengthY];
         board = new Board(lengthX, lengthY, bombCount);
+        graphics = new Graphics(board,images);
         board.createBoard();
         board.setHoneyComb(honeyComb);
-        board.setImages(images); //загружаем картинки
+        board.setGraphics(graphics);
+
         int radCir = 30; //радиус вписанной окружности = половина высоты
         hex(radCir);
         Pane root = new Pane();
@@ -49,7 +51,7 @@ public class Game extends Application {
         ChoiceBox<String> fieldChoiceBox = new ChoiceBox<>(field);
         fieldChoiceBox.relocate((2 * radCir + 2) * lengthX - 100, 3 * radCir / 2.0 * lengthY + 22);
 
-        ObservableList<String> amount = FXCollections.observableArrayList("10", "20");//количество бомб
+        ObservableList<String> amount = FXCollections.observableArrayList("10", "20", "30");//количество бомб
         ChoiceBox<String> amountChoiceBox = new ChoiceBox<>(amount);
         amountChoiceBox.relocate((2 * radCir + 2) * lengthX - 200, 3 * radCir / 2.0 * lengthY + 22);
 
@@ -57,7 +59,8 @@ public class Game extends Application {
             if (fieldChoiceBox.getValue().equals("16*16")) {
                 lengthX = 16;
                 lengthY = 16;
-            } else {
+            }
+            else {
                 lengthX = 12;
                 lengthY = 12;
             }
@@ -72,8 +75,11 @@ public class Game extends Application {
         amountChoiceBox.setOnAction(e -> {
             if (amountChoiceBox.getValue().equals("10")) {
                 bombCount = 10;
-            } else {
+            } else if(amountChoiceBox.getValue().equals("20")) {
                 bombCount = 20;
+            }
+            else{
+                bombCount = 30;
             }
             primaryStage.close();
             try {
@@ -97,7 +103,6 @@ public class Game extends Application {
         primaryStage.show();
 
     }
-
     private void hex(int radCir) {
         ArrayList<ArrayList<Pair<Integer, Integer>>> center = new ArrayList<>(); //координаты центра
         for (int i = 0; i < lengthX; i++) {
@@ -147,22 +152,31 @@ public class Game extends Application {
                 });
             }
         }
-    }
 
+    }
     private void flag(Element element) {
         Polygon polygon = honeyComb[element.getHorizontal()][element.getVertical()];
-
         if (board.getEnd() || element.getOpened()) return;
         if (!(element.getFlagged())) {
-            // polygon.setFill(new ImagePattern(new Image("resources/6.png")));
             Image flag = images.get(7);
             polygon.setFill(new ImagePattern(flag));
+
+
         } else {
             polygon.setFill(Color.LIGHTGOLDENRODYELLOW);
         }
-        board.flag(element);
-    }
+        if(!element.getBomb()&&element.getFlagged()){
+        bombCount--;
+        }
+        if(bombCount==0){
+            Message m = new Message();
+            m.win();
+        }
 
+        board.flag(element);
+
+
+    }
     private void makeImages() throws FileNotFoundException { //массив для картинок
         images = new ArrayList<>();
         images.add(new Image(new FileInputStream("resources/0.png")));
@@ -174,6 +188,9 @@ public class Game extends Application {
         images.add(new Image(new FileInputStream("resources/6.png")));
         images.add(new Image(new FileInputStream("resources/flag.png")));
     }
+
+
+
 
 
 
