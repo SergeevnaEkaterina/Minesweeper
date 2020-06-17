@@ -2,7 +2,6 @@ package test;
 import org.junit.jupiter.api.Test;
 import sample.Board;
 import sample.Element;
-
 import java.util.List;
 import java.util.Random;
 
@@ -90,7 +89,6 @@ class BoardTest {
         assertNotEquals(1,e2.getHorizontal());
         assertNotEquals(1, e2.getVertical());
         assertFalse(e2.getBomb());
-
 
     }
 }

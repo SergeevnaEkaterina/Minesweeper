@@ -13,7 +13,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class Game extends Application {
     private int lengthX = 12; //количество ячеек и бомб по умолчанию
     private int lengthY = 12;
     private int bombCount = 10;
-    public int bombFree = lengthX * lengthY - bombCount;
+    private int bombFree = lengthX * lengthY - bombCount;
     private Board board;
     private Polygon[][] honeyComb;
     private ArrayList<Image> images;

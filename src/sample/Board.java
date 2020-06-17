@@ -10,7 +10,6 @@ public class Board {
     private int bombCount;
     Game g = new Game();
     public int rest = Objects.requireNonNull(g).getFree();//количество ячеек без бомб
-
     private boolean end = false;
     private Element[][] elem;
 
@@ -96,47 +95,30 @@ public class Board {
 
 
     public Condition openElement(Element element) {
-
         if(getEnd()){
-
             return Condition.END;
         }
         if (element.getOpened()||element.getFlagged()) return Condition.GAME;
-
         if(!element.getBomb()){
             element.setOpened(true);
         }
-
          if (element.getBomb()) {
             end = true;
-
-
-
             return Condition.LOSE;
         }
-
         rest--;
-
         if ( element.getMinedNear() == 0) {
             getNeighbors(element).forEach(this::openElement);//открываем незаминированную область
-
         }
-
         if (rest == 0) {
-
             end=true;
            return Condition.WIN;
         }
         else return Condition.GAME;
-
     }
-
 
 
     public boolean getEnd() {
         return end;
     }
-
-
-
 }
