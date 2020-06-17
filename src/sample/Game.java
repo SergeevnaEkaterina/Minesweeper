@@ -27,7 +27,6 @@ public class Game extends Application {
     private int lengthX = 12; //количество ячеек и бомб по умолчанию
     private int lengthY = 12;
     private int bombCount = 10;
-    private int bombFree = lengthX * lengthY - bombCount;
     private Board board;
     private Polygon[][] honeyComb;
     private ArrayList<Image> images;

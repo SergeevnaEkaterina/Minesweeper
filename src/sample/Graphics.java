@@ -15,7 +15,7 @@ public class Graphics {
     }
 
     public void updateUI(Polygon hexagon,Element element){
-        Image count = images.get((int) element.getMinedNear());//берем картинку из массива, где номер- количество мин рядом
+        Image count = images.get(element.getMinedNear());//берем картинку из массива, где номер- количество мин рядом
         hexagon.setFill(new ImagePattern(count)); //устанавливаем ее на шестиугольник
     }
     public void redColor(Polygon hexagon){
