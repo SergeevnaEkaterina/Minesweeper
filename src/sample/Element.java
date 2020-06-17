@@ -39,7 +39,7 @@ public class Element {
         flagged = flag;
     }
 
-    public long getMinedNear() {//количество заминированных соседей
+    public int getMinedNear() {//количество заминированных соседей
         return bombsClose;
     }
 

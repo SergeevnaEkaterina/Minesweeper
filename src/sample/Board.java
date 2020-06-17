@@ -46,8 +46,8 @@ public class Board {
                 if (e.getBomb()) {
                     continue;
                 }
-                long amount = getNeighbors(e).stream().filter(Element::getBomb).count();
-                e.setMinedNear((int) amount);
+                int amount = (int) getNeighbors(e).stream().filter(Element::getBomb).count();
+                e.setMinedNear(amount);
             }
         }
     }
