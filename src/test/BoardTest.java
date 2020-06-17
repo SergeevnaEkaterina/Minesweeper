@@ -19,8 +19,7 @@ class BoardTest {
         int i = random.nextInt(16);
         int j = random.nextInt(16);
 
-        List<Element> near = null;
-        near = board.getNeighbors(board.getElement(i, j));
+        List<Element> near = board.getNeighbors(board.getElement(i, j));
 
         for (Element e : near) {
             assertTrue(board.getNeighbors(e).contains(board.getElement(i, j)));
@@ -40,7 +39,7 @@ class BoardTest {
             int j = random.nextInt(8);
 
             if (!(board.getElement(i, j).getBomb())) {
-                board.reveal(board.getElement(i, j));
+                board.openElement(board.getElement(i, j));
                 assertTrue(board.getElement(i, j).getOpened());
             } else {
                 long expected = board.getElement(i, j).getMinedNear();

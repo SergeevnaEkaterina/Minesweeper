@@ -1,28 +1,30 @@
 package sample;
-import javafx.scene.shape.Polygon;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class Board {
     private int xCells;
     private int yCells;
     private int bombCount;
-    private Graphics graphics ;
+    Game g = new Game();
+    public int rest = Objects.requireNonNull(g).getFree();//количество ячеек без бомб
+
     private boolean end = false;
     private Element[][] elem;
-    private Polygon[][] honeyComb;
-    public Message m = new Message();
+
+
+
     public Board(int xCells, int yCells, int bombCount) {
         this.xCells = xCells;
         this.yCells = yCells;
         this.bombCount = bombCount;
+
         elem = new Element[xCells][yCells];
     }
 
-    public void setGraphics(Graphics graphics){
-        this.graphics = graphics;
-    }
+
 
     public void createBoard() {  //создаем поле
 
@@ -77,53 +79,64 @@ public class Board {
         }
         return neighbors;
     }
+
     public Element getElement(int x, int y) {
         return elem[x][y];
     }
 
 
-
     public void flag(Element e) {
         if (!e.getFlagged()) {
             e.setFlagged(true);
-        }
-        else {
+        } else {
             e.setFlagged(false);
         }
     }
 
-    public void reveal(Element e)  {
-        e.setOpened(true);
-        if (e.getBomb()) {
+
+
+    public Condition openElement(Element element) {
+
+        if(getEnd()){
+
+            return Condition.END;
+        }
+        if (element.getOpened()||element.getFlagged()) return Condition.GAME;
+
+        if(!element.getBomb()){
+            element.setOpened(true);
+        }
+
+         if (element.getBomb()) {
             end = true;
-            System.out.println("you lose");
 
-         m.lose();
+
+
+            return Condition.LOSE;
         }
 
+        rest--;
+
+        if ( element.getMinedNear() == 0) {
+            getNeighbors(element).forEach(this::openElement);//открываем незаминированную область
+
+        }
+
+        if (rest == 0) {
+
+            end=true;
+           return Condition.WIN;
+        }
+        else return Condition.GAME;
 
     }
 
-    void openElement(Element element)  {
-        Polygon hexagon = honeyComb[element.getHorizontal()][element.getVertical()];
-        if (element.getOpened() || getEnd() || element.getFlagged()) return;
-        reveal(element);
-        if (element.getBomb()) {
-            graphics.redColor(hexagon);
-            return;
 
-        }
-        graphics.updateUI(hexagon,element);
-        if (!(element.getBomb()) && element.getMinedNear() == 0) {
-            getNeighbors(element).forEach(this::openElement); //открываем незаминированную область
-        }
-    }
+
     public boolean getEnd() {
         return end;
     }
 
 
-    public void setHoneyComb(Polygon[][] honeyComb) {
-        this.honeyComb = honeyComb;
-    }
+
 }

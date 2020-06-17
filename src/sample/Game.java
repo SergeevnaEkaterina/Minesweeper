@@ -28,12 +28,12 @@ public class Game extends Application {
     private int lengthX = 12; //количество ячеек и бомб по умолчанию
     private int lengthY = 12;
     private int bombCount = 10;
-    private int minesLeft = bombCount;
-    private int flags = 0;
+    public int bombFree = lengthX * lengthY - bombCount;
     private Board board;
     private Polygon[][] honeyComb;
     private ArrayList<Image> images;
     private Graphics graphics;
+    public Message m = new Message();
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
         makeImages();
@@ -41,8 +41,7 @@ public class Game extends Application {
         board = new Board(lengthX, lengthY, bombCount);
         graphics = new Graphics(board,images);
         board.createBoard();
-        board.setHoneyComb(honeyComb);
-        board.setGraphics(graphics);
+
 
         int radCir = 30; //радиус вписанной окружности = половина высоты
         hex(radCir);
@@ -143,9 +142,39 @@ public class Game extends Application {
                         x3, y2);
                 honeyComb[x][y].setFill(Color.LIGHTGOLDENRODYELLOW);
                 honeyComb[x][y].setStroke(Color.ORANGERED);
+                int finalY = y;
+                int finalX = x;
+
                 honeyComb[x][y].setOnMouseClicked(e -> {
-                    if (e.getButton() == MouseButton.PRIMARY)
-                        board.openElement(cell);
+
+                    if (e.getButton() == MouseButton.PRIMARY){
+                        Condition current = board.openElement(cell);
+                        if(current==Condition.LOSE){
+                            graphics.redColor(honeyComb[finalX][finalY]);
+                            m.lose();
+                        }
+                        else if(current==Condition.WIN){
+                            for (int a = 0; a < lengthX; a++) {
+                                for (int b = 0; b < lengthY; b++) {
+                                    if(board.getElement(a,b).getOpened()){
+                                        graphics.updateUI(honeyComb[a][b],board.getElement(a,b));
+                                    }
+                                }
+                            }
+                            m.win();
+                        }
+
+                        else if(current==Condition.GAME){
+
+                            for (int a = 0; a < lengthX; a++) {
+                                for (int b = 0; b < lengthY; b++) {
+                                    if(board.getElement(a,b).getOpened()){
+                                        graphics.updateUI(honeyComb[a][b],board.getElement(a,b));
+                                    }
+                                }
+                            }
+                        }
+                    }
                     else {
                         flag(cell);
                     }
@@ -154,6 +183,11 @@ public class Game extends Application {
         }
 
     }
+
+        public int getFree() {
+        return bombFree;
+    }
+
     private void flag(Element element) {
         Polygon polygon = honeyComb[element.getHorizontal()][element.getVertical()];
         if (board.getEnd() || element.getOpened()) return;
@@ -161,22 +195,13 @@ public class Game extends Application {
             Image flag = images.get(7);
             polygon.setFill(new ImagePattern(flag));
 
-
         } else {
             polygon.setFill(Color.LIGHTGOLDENRODYELLOW);
         }
-        if(!element.getBomb()&&element.getFlagged()){
-        bombCount--;
-        }
-        if(bombCount==0){
-            Message m = new Message();
-            m.win();
-        }
 
         board.flag(element);
-
-
     }
+
     private void makeImages() throws FileNotFoundException { //массив для картинок
         images = new ArrayList<>();
         images.add(new Image(new FileInputStream("resources/0.png")));
@@ -188,10 +213,5 @@ public class Game extends Application {
         images.add(new Image(new FileInputStream("resources/6.png")));
         images.add(new Image(new FileInputStream("resources/flag.png")));
     }
-
-
-
-
-
 
 }

@@ -32,7 +32,7 @@ public void lose()  {
     secondStage.setTitle("You lost! Try again!");
     secondStage.setScene(secondScene);
     secondStage.initStyle(StageStyle.DECORATED);
-    secondStage.initModality(Modality.NONE);
+    secondStage.initModality(Modality.APPLICATION_MODAL);
     secondStage.show();
 }
 
@@ -55,7 +55,8 @@ public void lose()  {
         secondStage.setTitle("You won! Congratulations!");
         secondStage.setScene(secondScene);
         secondStage.initStyle(StageStyle.DECORATED);
-        secondStage.initModality(Modality.NONE);
+        secondStage.initModality(Modality.APPLICATION_MODAL);
         secondStage.show();
     }
+
 }
