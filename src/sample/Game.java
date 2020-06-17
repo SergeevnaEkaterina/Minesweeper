@@ -145,33 +145,20 @@ public class Game extends Application {
                 int finalX = x;
 
                 honeyComb[x][y].setOnMouseClicked(e -> {
-
-                    if (e.getButton() == MouseButton.PRIMARY){
+                    if (e.getButton() == MouseButton.PRIMARY) {
                         Condition current = board.openElement(cell);
-                        if(current==Condition.LOSE){
-                            graphics.redColor(honeyComb[finalX][finalY]);
-                            m.lose();
-                        }
-                        else if(current==Condition.WIN){
-                            for (int a = 0; a < lengthX; a++) {
-                                for (int b = 0; b < lengthY; b++) {
-                                    if(board.getElement(a,b).getOpened()){
-                                        graphics.updateUI(honeyComb[a][b],board.getElement(a,b));
-                                    }
-                                }
-                            }
-                            m.win();
-                        }
-
-                        else if(current==Condition.GAME){
-
-                            for (int a = 0; a < lengthX; a++) {
-                                for (int b = 0; b < lengthY; b++) {
-                                    if(board.getElement(a,b).getOpened()){
-                                        graphics.updateUI(honeyComb[a][b],board.getElement(a,b));
-                                    }
-                                }
-                            }
+                        switch (current) {
+                            case LOSE:
+                                graphics.redColor(honeyComb[finalX][finalY]);
+                                m.lose();
+                                break;
+                            case WIN:
+                                updateField();
+                                m.win();
+                                break;
+                            case GAME:
+                                updateField();
+                                break;
                         }
                     }
                     else {
@@ -180,13 +167,22 @@ public class Game extends Application {
                 });
             }
         }
-
     }
 
-        public int getFree() {
+    public void updateField(){
+        for (int a = 0; a < lengthX; a++) {
+            for (int b = 0; b < lengthY; b++) {
+                if (board.getElement(a, b).getOpened()) {
+                    graphics.updateUI(honeyComb[a][b], board.getElement(a, b));
+                }
+            }
+        }
+    }
+
+     /**   public int getFree() {
         return bombFree;
     }
-
+*/
     private void flag(Element element) {
         Polygon polygon = honeyComb[element.getHorizontal()][element.getVertical()];
         if (board.getEnd() || element.getOpened()) return;

@@ -7,7 +7,7 @@ public class Element {
     private final int HORIZONTAL;
     private final int VERTICAL;
     private boolean opened = false;
-    private long bombsClose;
+    private int bombsClose;
 
     public Element(int horizontal, int vertical, boolean isMine) {
         this.HORIZONTAL = horizontal;
@@ -43,7 +43,7 @@ public class Element {
         return bombsClose;
     }
 
-    public void setMinedNear(long count) {
+    public void setMinedNear(int count) {
         bombsClose = count;
     }
 

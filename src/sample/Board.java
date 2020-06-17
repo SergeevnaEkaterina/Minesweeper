@@ -1,25 +1,21 @@
 package sample;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 public class Board {
     private int xCells;
     private int yCells;
     private int bombCount;
-    Game g = new Game();
-    public int rest = Objects.requireNonNull(g).getFree();//количество ячеек без бомб
-    private boolean end = false;
+    private int rest; //количество ячеек без бомб
+     private boolean end = false;
     private Element[][] elem;
-
-
 
     public Board(int xCells, int yCells, int bombCount) {
         this.xCells = xCells;
         this.yCells = yCells;
         this.bombCount = bombCount;
-
+        rest = xCells * yCells - bombCount;
         elem = new Element[xCells][yCells];
     }
 
@@ -51,7 +47,7 @@ public class Board {
                     continue;
                 }
                 long amount = getNeighbors(e).stream().filter(Element::getBomb).count();
-                e.setMinedNear(amount);
+                e.setMinedNear((int) amount);
             }
         }
     }
@@ -93,7 +89,6 @@ public class Board {
     }
 
 
-
     public Condition openElement(Element element) {
         if(getEnd()){
             return Condition.END;
@@ -107,6 +102,7 @@ public class Board {
             return Condition.LOSE;
         }
         rest--;
+         System.out.println(rest);
         if ( element.getMinedNear() == 0) {
             getNeighbors(element).forEach(this::openElement);//открываем незаминированную область
         }
